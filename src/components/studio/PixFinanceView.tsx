@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { WebhookLog } from '../../types/index.ts';
+import { motion } from 'framer-motion';
+import {
+  indicatorContainerVariants,
+  indicatorCardVariants,
+  EASE_OUT_EXPO,
+} from '../../design-system/motionVariants.ts';
 
 interface PixFinanceViewProps {
   logs: WebhookLog[];
@@ -71,9 +77,18 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
           </div>
         </div>
 
-        {/* 4 Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5">
+        {/* 4 Metric Cards Animados com Framer Motion (ease-out-expo) */}
+        <motion.div
+          variants={indicatorContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        >
+          <motion.div
+            variants={indicatorCardVariants}
+            whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+            className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5 hover:border-white/15 transition-colors cursor-default"
+          >
             <div className="flex items-center justify-between text-[#8f9194]">
               <span className="text-[10px] font-semibold uppercase tracking-wider">Tempo Médio de Confirmação</span>
               <span className="material-symbols-outlined text-[18px]">speed</span>
@@ -83,9 +98,13 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
               <span className="text-xs text-[#8f9194]">segundos</span>
             </div>
             <span className="text-[11px] text-[#fabc4d] mt-1 font-medium">99.8% conciliado via Push</span>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5">
+          <motion.div
+            variants={indicatorCardVariants}
+            whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+            className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5 hover:border-white/15 transition-colors cursor-default"
+          >
             <div className="flex items-center justify-between text-[#8f9194]">
               <span className="text-[10px] font-semibold uppercase tracking-wider">Volume de Sinais Recebidos</span>
               <span className="material-symbols-outlined text-[18px]">account_balance_wallet</span>
@@ -96,9 +115,13 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
               <span className="text-xs text-[#8f9194]">,00</span>
             </div>
             <span className="text-[11px] text-[#c5c7c9] mt-1">64 sessões bloqueadas</span>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5">
+          <motion.div
+            variants={indicatorCardVariants}
+            whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+            className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5 hover:border-white/15 transition-colors cursor-default"
+          >
             <div className="flex items-center justify-between text-[#8f9194]">
               <span className="text-[10px] font-semibold uppercase tracking-wider">Taxa de Conversão de QR</span>
               <span className="material-symbols-outlined text-[18px]">qr_code_2</span>
@@ -108,9 +131,13 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
               <span className="text-xs text-[#8f9194]">%</span>
             </div>
             <span className="text-[11px] text-[#fabc4d] mt-1 font-medium">+3.1% pós-janela 15min</span>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5">
+          <motion.div
+            variants={indicatorCardVariants}
+            whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+            className="bg-[#1c1b1c] p-4 sm:p-5 rounded-xl flex flex-col justify-between border border-white/5 hover:border-white/15 transition-colors cursor-default"
+          >
             <div className="flex items-center justify-between text-[#8f9194]">
               <span className="text-[10px] font-semibold uppercase tracking-wider">Segurança Antifraude</span>
               <span className="material-symbols-outlined text-[18px]">shield</span>
@@ -120,8 +147,8 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
               <span className="text-xs text-[#8f9194]">falso comprovante</span>
             </div>
             <span className="text-[11px] text-[#8f9194] mt-1">Chave EVP com token dinâmico</span>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Main Grid: Left Column Settings + Right Column Split & Webhook Simulator */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

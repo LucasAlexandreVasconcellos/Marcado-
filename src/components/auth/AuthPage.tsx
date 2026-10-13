@@ -2,7 +2,7 @@ import React, { useState, Suspense, lazy } from 'react';
 import { StudioUser } from '../../types/index.ts';
 import { Button } from '../../design-system/Button.tsx';
 import { WhatsAppInputGroup } from '../../design-system/WhatsAppInputGroup.tsx';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Code-splitting Three.js: only loaded dynamically when AuthPage is mounted!
 const Scene3D = lazy(() => import('./Scene3D.tsx'));

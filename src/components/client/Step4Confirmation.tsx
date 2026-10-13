@@ -4,7 +4,7 @@ import { formatCurrency } from '../../utils/formatters.ts';
 import { downloadLegalCertificate } from '../../utils/pdfCertificate.ts';
 import { Button } from '../../design-system/Button.tsx';
 import confetti from 'canvas-confetti';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 
 interface Step4ConfirmationProps {
   session: Session;

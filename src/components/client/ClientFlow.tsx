@@ -4,7 +4,7 @@ import { Step1Verification } from './Step1Verification.tsx';
 import { Step2Anamnese } from './Step2Anamnese.tsx';
 import { Step3PixPayment } from './Step3PixPayment.tsx';
 import { Step4Confirmation } from './Step4Confirmation.tsx';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ClientFlowProps {
   session: Session;

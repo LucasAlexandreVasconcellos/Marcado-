@@ -6,7 +6,7 @@ import { CurrencyInput } from '../../design-system/CurrencyInput.tsx';
 import { CustomDatePicker } from '../../design-system/CustomDatePicker.tsx';
 import { CustomTimePicker } from '../../design-system/CustomTimePicker.tsx';
 import { Button } from '../../design-system/Button.tsx';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { WhatsAppInputGroup, CountryCode, DEFAULT_COUNTRIES } from '../../design-system/WhatsAppInputGroup.tsx';
 

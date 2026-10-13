@@ -4,7 +4,12 @@ import { formatCurrency, getAvatarColor, getInitials } from '../../utils/formatt
 import { Badge } from '../../design-system/Badge.tsx';
 import { Tabs } from '../../design-system/Tabs.tsx';
 import { EmptyState } from '../../design-system/EmptyState.tsx';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  indicatorContainerVariants,
+  indicatorCardVariants,
+  EASE_OUT_EXPO,
+} from '../../design-system/motionVariants.ts';
 
 interface AgendaViewProps {
   sessions: Session[];
@@ -120,10 +125,19 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
         </div>
       </div>
 
-      {/* Section 2: Quatro Indicadores Bento com Hierarquia */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Section 2: Quatro Indicadores Bento com Hierarquia Animados com Framer Motion (ease-out-expo) */}
+      <motion.div
+        variants={indicatorContainerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
         {/* KPI 1: Presença nas Sessões (Destaque Maior) */}
-        <div className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/10 hover:border-[#fabc4d]/30 transition-all flex flex-col justify-between gap-4 shadow-md relative overflow-hidden group">
+        <motion.div
+          variants={indicatorCardVariants}
+          whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+          className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/10 hover:border-[#fabc4d]/30 transition-colors flex flex-col justify-between gap-4 shadow-md relative overflow-hidden group cursor-default"
+        >
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#fabc4d]/5 rounded-bl-full pointer-events-none" />
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-0.5">
@@ -148,17 +162,21 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: '94.2%' }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.9, ease: EASE_OUT_EXPO, delay: 0.2 }}
               className="bg-[#fabc4d] h-full rounded-full"
             />
           </div>
           <span className="text-[11px] text-[#8f9194] leading-tight">
             Quase zero faltas após a exigência do sinal via Pix
           </span>
-        </div>
+        </motion.div>
 
         {/* KPI 2: Sinais Recebidos */}
-        <div className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/5 hover:border-white/15 transition-all flex flex-col justify-between gap-4 shadow-sm">
+        <motion.div
+          variants={indicatorCardVariants}
+          whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+          className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/5 hover:border-white/15 transition-colors flex flex-col justify-between gap-4 shadow-sm cursor-default"
+        >
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] font-semibold text-[#8f9194] uppercase tracking-wider">
@@ -179,17 +197,21 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: '78%' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.85, ease: EASE_OUT_EXPO, delay: 0.28 }}
               className="bg-white h-full rounded-full"
             />
           </div>
           <span className="text-[11px] text-[#8f9194]">
             {countConfirmed} sinais recebidos e confirmados
           </span>
-        </div>
+        </motion.div>
 
         {/* KPI 3: Capacidade Semanal */}
-        <div className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/5 hover:border-white/15 transition-all flex flex-col justify-between gap-4 shadow-sm">
+        <motion.div
+          variants={indicatorCardVariants}
+          whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+          className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/5 hover:border-white/15 transition-colors flex flex-col justify-between gap-4 shadow-sm cursor-default"
+        >
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] font-semibold text-[#8f9194] uppercase tracking-wider">
@@ -215,10 +237,14 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
           <span className="text-[11px] text-[#8f9194]">
             32 horas estimadas de bancada
           </span>
-        </div>
+        </motion.div>
 
         {/* KPI 4: Termos Assinados */}
-        <div className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/5 hover:border-white/15 transition-all flex flex-col justify-between gap-4 shadow-sm">
+        <motion.div
+          variants={indicatorCardVariants}
+          whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE_OUT_EXPO } }}
+          className="p-5 sm:p-6 bg-[#1c1b1c] rounded-2xl border border-white/5 hover:border-white/15 transition-colors flex flex-col justify-between gap-4 shadow-sm cursor-default"
+        >
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-0.5">
               <span className="text-[10px] font-semibold text-[#8f9194] uppercase tracking-wider">
@@ -240,15 +266,15 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: '100%' }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.85, ease: EASE_OUT_EXPO, delay: 0.36 }}
               className="bg-[#fabc4d] h-full rounded-full"
             />
           </div>
           <span className="text-[11px] text-[#8f9194]">
             Anamnese digital com assinatura e carimbo SHA-256
           </span>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Main Operations Grid */}
       <div className={`grid grid-cols-1 ${isDemoMode ? 'xl:grid-cols-12' : ''} gap-8`}>
