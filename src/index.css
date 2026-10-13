@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-surface: #131314;
+    --color-surface-dim: #131314;
+    --color-surface-bright: #39393a;
+    --color-surface-container-lowest: #0e0e0f;
+    --color-surface-container-low: #1c1b1c;
+    --color-surface-container: #201f20;
+    --color-surface-container-high: #2a2a2b;
+    --color-surface-container-highest: #353436;
+    --color-on-surface: #e5e2e3;
+    --color-on-surface-variant: #c5c7c9;
+    --color-outline: #8f9194;
+    --color-outline-variant: #44474a;
+    --color-primary: #ffffff;
+    --color-on-primary: #2f3132;
+    --color-secondary: #fabc4d;
+    --color-on-secondary: #281900;
+    --color-secondary-container: #bd8718;
+    --color-error: #ffb4ab;
+    --color-error-container: #93000a;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    overscroll-behavior: none;
+  }
+
+  /* Hide scrollbars for clean luxury feel */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+.font-headline {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Material Symbols formatting */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

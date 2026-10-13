@@ -1,0 +1,6 @@
+{
+  "name": "Marcado! Tattoo Atelier OS",
+  "description": "SaaS de alta precisão para estúdios de tatuagem, curadoria artística, agenda de sessões, sinal Pix em tempo real e ficha de anamnese com assinatura digital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
