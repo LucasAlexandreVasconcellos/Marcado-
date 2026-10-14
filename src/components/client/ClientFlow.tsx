@@ -5,6 +5,8 @@ import { Step2Anamnese } from './Step2Anamnese.tsx';
 import { Step3PixPayment } from './Step3PixPayment.tsx';
 import { Step4Confirmation } from './Step4Confirmation.tsx';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LGPDModal } from '../common/LGPDModal.tsx';
+import { anonymizeSession, purgeSensitiveHealthData } from '../../utils/privacy.ts';
 
 interface ClientFlowProps {
   session: Session;
@@ -27,6 +29,19 @@ export const ClientFlow: React.FC<ClientFlowProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<number>(initialStep);
   const [currentSession, setCurrentSession] = useState<Session>(session);
+  const [showLgpdModal, setShowLgpdModal] = useState(false);
+
+  const handleAnonymize = (sess: Session) => {
+    const updated = anonymizeSession(sess);
+    setCurrentSession(updated);
+    onSessionUpdated(updated);
+  };
+
+  const handlePurgeHealth = (sess: Session) => {
+    const updated = purgeSensitiveHealthData(sess);
+    setCurrentSession(updated);
+    onSessionUpdated(updated);
+  };
 
   const handleStep1Proceed = (updated: Partial<Session>) => {
     const next = { ...currentSession, ...updated };
@@ -200,6 +215,31 @@ export const ClientFlow: React.FC<ClientFlowProps> = ({
             )}
           </AnimatePresence>
         </main>
+
+        {/* Footer com link de conformidade LGPD */}
+        <footer className="mt-auto py-4 px-6 border-t border-white/5 bg-[#131314] flex flex-col sm:flex-row items-center justify-between gap-2 text-center shrink-0">
+          <span className="text-[10px] text-[#8f9194]">
+            {studioName} • Ambiente Seguro Marcado
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowLgpdModal(true)}
+            className="text-[10px] text-[#fabc4d] hover:underline flex items-center gap-1 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[14px]">verified_user</span>
+            Privacidade & Direitos LGPD (Art. 18)
+          </button>
+        </footer>
+
+        {/* Modal de Direitos do Titular LGPD */}
+        <LGPDModal
+          session={currentSession}
+          isOpen={showLgpdModal}
+          onClose={() => setShowLgpdModal(false)}
+          onAnonymizeSession={handleAnonymize}
+          onPurgeHealthData={handlePurgeHealth}
+          onShowToast={onShowToast}
+        />
       </div>
     </div>
   );

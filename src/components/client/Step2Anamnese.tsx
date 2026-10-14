@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Session } from '../../types/index.ts';
 import { generateSHA256Mock } from '../../utils/storage.ts';
 import { Button } from '../../design-system/Button.tsx';
+import { generateLgpdAuditRecord } from '../../utils/privacy.ts';
 
 interface Step2AnamneseProps {
   session: Session;
@@ -22,6 +23,8 @@ export const Step2Anamnese: React.FC<Step2AnamneseProps> = ({ session, onProceed
   const [alcohol, setAlcohol] = useState(false);
 
   const [agreedTerms, setAgreedTerms] = useState(false);
+  const [agreedLgpdHealth, setAgreedLgpdHealth] = useState(false);
+  const [agreedLgpdRights, setAgreedLgpdRights] = useState(false);
   const [hasSigned, setHasSigned] = useState(false);
 
   // Canvas ref for ink pen stroke
@@ -114,7 +117,7 @@ export const Step2Anamnese: React.FC<Step2AnamneseProps> = ({ session, onProceed
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!hasSigned || !agreedTerms) return;
+    if (!hasSigned || !agreedTerms || !agreedLgpdHealth || !agreedLgpdRights) return;
 
     const canvas = canvasRef.current;
     const signatureDataUrl = canvas ? canvas.toDataURL('image/png') : '';
@@ -133,6 +136,7 @@ export const Step2Anamnese: React.FC<Step2AnamneseProps> = ({ session, onProceed
       signatureDataUrl,
       shaHash: sha,
       signedAt: new Date().toISOString(),
+      lgpdAudit: generateLgpdAuditRecord(agreedLgpdHealth),
     });
   };
 
@@ -321,25 +325,54 @@ export const Step2Anamnese: React.FC<Step2AnamneseProps> = ({ session, onProceed
           )}
         </div>
 
-        {/* Checkbox de Concordância Legal */}
-        <label className="flex items-start gap-3 p-3 rounded-xl bg-[#0e0e0f] border border-white/5 cursor-pointer mt-2">
-          <input
-            type="checkbox"
-            checked={agreedTerms}
-            onChange={(e) => setAgreedTerms(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-white/20 accent-[#fabc4d] cursor-pointer"
-          />
-          <span className="text-[11px] text-[#c5c7c9] leading-relaxed">
-            Declaro que li e concordo com os termos de biossegurança, políticas de cancelamento e confirmo a veracidade de todas as respostas médicas informadas.
-          </span>
-        </label>
+        {/* Bloco de Consentimentos LGPD (Art. 7º e Art. 11 da Lei 13.709/2018) */}
+        <div className="flex flex-col gap-2 pt-2">
+          {/* Checkbox 1: Biossegurança e Regras Contratuais */}
+          <label className="flex items-start gap-3 p-3 rounded-xl bg-[#0e0e0f] border border-white/5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={agreedTerms}
+              onChange={(e) => setAgreedTerms(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-white/20 accent-[#fabc4d] cursor-pointer shrink-0"
+            />
+            <span className="text-[11px] text-[#c5c7c9] leading-relaxed">
+              Declaro que li e concordo com as regras do estúdio, biossegurança e política de sinal Pix.
+            </span>
+          </label>
+
+          {/* Checkbox 2: Consentimento Específico para Dados Sensíveis de Saúde (Art. 11 LGPD) */}
+          <label className="flex items-start gap-3 p-3 rounded-xl bg-[#0e0e0f] border border-white/5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={agreedLgpdHealth}
+              onChange={(e) => setAgreedLgpdHealth(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-white/20 accent-[#fabc4d] cursor-pointer shrink-0"
+            />
+            <span className="text-[11px] text-[#c5c7c9] leading-relaxed">
+              <strong className="text-white">Consentimento de Saúde (Art. 11, I LGPD):</strong> Autorizo expressamente o tratamento das minhas respostas clínicas e alergias estritamente para segurança dermatológica durante o procedimento.
+            </span>
+          </label>
+
+          {/* Checkbox 3: Direitos do Titular e Revogabilidade (Art. 8º e 18 LGPD) */}
+          <label className="flex items-start gap-3 p-3 rounded-xl bg-[#0e0e0f] border border-white/5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={agreedLgpdRights}
+              onChange={(e) => setAgreedLgpdRights(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded border-white/20 accent-[#fabc4d] cursor-pointer shrink-0"
+            />
+            <span className="text-[11px] text-[#c5c7c9] leading-relaxed">
+              <strong className="text-white">Direitos do Titular (Art. 18 LGPD):</strong> Estou ciente de que posso revogar este consentimento, solicitar portabilidade, anonimização ou exclusão dos dados médicos a qualquer momento.
+            </span>
+          </label>
+        </div>
       </section>
 
       {/* Botão de Avançar */}
       <Button
         variant="primary"
         size="lg"
-        disabled={!hasSigned || !agreedTerms}
+        disabled={!hasSigned || !agreedTerms || !agreedLgpdHealth || !agreedLgpdRights}
         icon="arrow_forward"
         iconPosition="right"
         className="w-full mt-2"

@@ -11,12 +11,14 @@ interface PixFinanceViewProps {
   logs: WebhookLog[];
   onTriggerSimulatedPayment: () => void;
   onShowToast: (msg: string) => void;
+  privacyMode?: boolean;
 }
 
 export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
   logs,
   onTriggerSimulatedPayment,
   onShowToast,
+  privacyMode = true,
 }) => {
   const [activeProvider, setActiveProvider] = useState<'integrated' | 'manual'>('integrated');
   const [retentionPolicy, setRetentionPolicy] = useState(true);
@@ -24,6 +26,14 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
   const [ttl, setTtl] = useState<'15m' | '30m' | '2h'>('30m');
   const [isSimulating, setIsSimulating] = useState(false);
   const [simFeedback, setSimFeedback] = useState<string | null>(null);
+
+  const maskClientInfo = (info: string) => {
+    if (!privacyMode) return info;
+    return info.replace(/(\(?\d{2}\)?\s*)(\d{1,5})[-.\s]?(\d{4})/, (_, ddd, part1, part2) => {
+      const masked = part1.length > 1 ? `${part1[0]}****` : '****';
+      return `${ddd || ''}${masked}-${part2}`;
+    });
+  };
 
   const handleSimulateWebhook = () => {
     setIsSimulating(true);
@@ -586,7 +596,7 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
                       {log.sessionTitle}
                     </span>
                     <span className="text-[10px] text-[#8f9194] truncate">
-                      {log.clientInfo}
+                      {maskClientInfo(log.clientInfo)}
                     </span>
                   </div>
                   <span className="text-xs font-bold text-[#fabc4d] font-mono shrink-0">
@@ -638,7 +648,7 @@ export const PixFinanceView: React.FC<PixFinanceViewProps> = ({
                     <td className="py-3 px-3">
                       <div className="flex flex-col">
                         <span className="text-white">{log.sessionTitle}</span>
-                        <span className="text-[10px] text-[#8f9194]">{log.clientInfo}</span>
+                        <span className="text-[10px] text-[#8f9194]">{maskClientInfo(log.clientInfo)}</span>
                       </div>
                     </td>
                     <td className="py-3 px-3 font-mono text-[10px] text-[#8f9194]">

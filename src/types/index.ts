@@ -31,6 +31,19 @@ export interface Session {
   anamneseNotes?: string;
   signatureDataUrl?: string;
   signedAt?: string;
+  isAnonymized?: boolean;
+  sensitiveDataPurged?: boolean;
+  lgpdAudit?: LGPDAuditRecord;
+}
+
+export interface LGPDAuditRecord {
+  consentGiven: boolean;
+  consentTimestamp: string;
+  termsVersion: string;
+  healthDataConsent: boolean;
+  purpose: string;
+  anonymizedAt?: string;
+  sensitiveDataPurgedAt?: string;
 }
 
 export interface Artist {

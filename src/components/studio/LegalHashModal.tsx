@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Session } from '../../types/index.ts';
 import { downloadLegalCertificate } from '../../utils/pdfCertificate.ts';
+import { maskPhone, maskCpf } from '../../utils/privacy.ts';
 
 interface LegalHashModalProps {
   session: Session | null;
@@ -8,6 +9,8 @@ interface LegalHashModalProps {
 }
 
 export const LegalHashModal: React.FC<LegalHashModalProps> = ({ session, onClose }) => {
+  const [revealSensitive, setRevealSensitive] = useState(false);
+
   if (!session) return null;
 
   return (
@@ -20,7 +23,7 @@ export const LegalHashModal: React.FC<LegalHashModalProps> = ({ session, onClose
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-[#2a2a2b] flex items-center justify-center text-[#8f9194] hover:text-white transition-colors"
+            className="w-8 h-8 rounded-lg bg-[#2a2a2b] flex items-center justify-center text-[#8f9194] hover:text-white transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -29,7 +32,43 @@ export const LegalHashModal: React.FC<LegalHashModalProps> = ({ session, onClose
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#8f9194] uppercase tracking-wider">Cliente Autenticado:</span>
-            <span className="text-sm font-semibold text-white">{session.clientName}</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-white">{session.clientName}</span>
+              {session.isAnonymized && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-950/60 text-purple-300 font-mono">
+                  Anonimizado
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Masked personal data block with reveal button */}
+          <div className="grid grid-cols-2 gap-2 text-xs p-3 bg-[#131314] rounded-lg border border-white/5">
+            <div>
+              <span className="text-[10px] text-[#8f9194] uppercase block">Telefone:</span>
+              <span className="font-mono text-white">
+                {maskPhone(session.clientPhone, revealSensitive)}
+              </span>
+            </div>
+            <div>
+              <span className="text-[10px] text-[#8f9194] uppercase block">CPF:</span>
+              <span className="font-mono text-white">
+                {maskCpf(session.clientCpf, revealSensitive)}
+              </span>
+            </div>
+            <div className="col-span-2 pt-1 border-t border-white/5 flex items-center justify-between">
+              <span className="text-[10px] text-[#8f9194]">Privacidade LGPD (Art. 6º, VII)</span>
+              <button
+                type="button"
+                onClick={() => setRevealSensitive((prev) => !prev)}
+                className="text-[11px] text-[#fabc4d] hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-[13px]">
+                  {revealSensitive ? 'visibility_off' : 'visibility'}
+                </span>
+                {revealSensitive ? 'Ocultar' : 'Revelar'}
+              </button>
+            </div>
           </div>
 
           <div className="p-4 bg-[#0e0e0f] rounded-lg flex flex-col gap-1.5 border border-white/5">
@@ -55,7 +94,7 @@ export const LegalHashModal: React.FC<LegalHashModalProps> = ({ session, onClose
           <div className="p-3 bg-[#201f20] rounded-lg flex items-start gap-2.5 text-xs text-[#c5c7c9] leading-relaxed">
             <span className="material-symbols-outlined text-[#fabc4d] text-[18px] shrink-0 mt-0.5">gavel</span>
             <span>
-              Certificado lacrado digitalmente. Assinatura touch e questionário de anamnese protegidos sob sigilo profissional médico e LGPD.
+              Certificado lacrado digitalmente. Assinatura touch e questionário de anamnese protegidos sob sigilo profissional médico e LGPD (Lei 13.709/2018, Art. 11).
             </span>
           </div>
         </div>

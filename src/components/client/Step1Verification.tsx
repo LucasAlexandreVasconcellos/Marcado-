@@ -217,6 +217,14 @@ export const Step1Verification: React.FC<Step1VerificationProps> = ({ session, o
           </div>
         </div>
 
+        {/* Aviso LGPD Minimização de Dados */}
+        <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#0e0e0f] border border-white/5 text-[11px] text-[#8f9194]">
+          <span className="material-symbols-outlined text-[#fabc4d] text-[16px] shrink-0">lock</span>
+          <span>
+            Dados cadastrais protegidos pela LGPD (Lei 13.709/2018). Coleta restrita para emissão de contrato e recibo Pix.
+          </span>
+        </div>
+
         <Button
           variant="primary"
           size="lg"

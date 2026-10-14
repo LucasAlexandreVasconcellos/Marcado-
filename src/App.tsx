@@ -26,6 +26,8 @@ import { PixFinanceView } from './components/studio/PixFinanceView.tsx';
 import { StudiosView } from './components/studio/StudiosView.tsx';
 import { NewSessionModal } from './components/studio/NewSessionModal.tsx';
 import { LegalHashModal } from './components/studio/LegalHashModal.tsx';
+import { LGPDModal } from './components/common/LGPDModal.tsx';
+import { anonymizeSession, purgeSensitiveHealthData } from './utils/privacy.ts';
 
 // Split Auth Page (with lazy Three.js rotary pen)
 import { AuthPage } from './components/auth/AuthPage.tsx';
@@ -85,8 +87,30 @@ export default function App() {
   // Modals & UI helpers
   const [isNewSessionOpen, setIsNewSessionOpen] = useState(false);
   const [legalHashSession, setLegalHashSession] = useState<Session | null>(null);
+  const [lgpdSession, setLgpdSession] = useState<Session | null>(null);
+  const [privacyMode, setPrivacyMode] = useState<boolean>(true);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  const handleAnonymizeSession = (target: Session) => {
+    const updated = anonymizeSession(target);
+    const updatedList = sessions.map((s) => (s.id === target.id ? updated : s));
+    setSessions(updatedList);
+    saveSessions(updatedList);
+    if (selectedSession.id === target.id) setSelectedSession(updated);
+    if (legalHashSession?.id === target.id) setLegalHashSession(updated);
+    if (lgpdSession?.id === target.id) setLgpdSession(updated);
+  };
+
+  const handlePurgeHealthData = (target: Session) => {
+    const updated = purgeSensitiveHealthData(target);
+    const updatedList = sessions.map((s) => (s.id === target.id ? updated : s));
+    setSessions(updatedList);
+    saveSessions(updatedList);
+    if (selectedSession.id === target.id) setSelectedSession(updated);
+    if (legalHashSession?.id === target.id) setLegalHashSession(updated);
+    if (lgpdSession?.id === target.id) setLgpdSession(updated);
+  };
 
   // Active studio (defaults to currentUser.studioName if present, else studios[0])
   const [activeStudio, setActiveStudio] = useState<Studio>(() => {
@@ -369,6 +393,7 @@ export default function App() {
               currentUser={currentUser}
               studioName={activeStudio.name}
               isDemoMode={isDemoMode}
+              onOpenLgpdModal={() => setLgpdSession(selectedSession || sessions[0] || null)}
             />
           </div>
 
@@ -395,6 +420,10 @@ export default function App() {
                   currentUser={currentUser}
                   studioName={activeStudio.name}
                   isDemoMode={isDemoMode}
+                  onOpenLgpdModal={() => {
+                    setMobileSidebarOpen(false);
+                    setLgpdSession(selectedSession || sessions[0] || null);
+                  }}
                 />
               </div>
               <div
@@ -416,6 +445,19 @@ export default function App() {
               onManageStudios={() => setStudioTab('studios')}
               isDemoMode={isDemoMode}
               currentUser={currentUser}
+              privacyMode={privacyMode}
+              onTogglePrivacyMode={() => {
+                setPrivacyMode((prev) => {
+                  const next = !prev;
+                  showToast(
+                    next
+                      ? 'Modo Privacidade LGPD Ativado: dados sensíveis mascarados.'
+                      : 'Modo Privacidade LGPD Desativado: dados visíveis no estúdio.'
+                  );
+                  return next;
+                });
+              }}
+              onOpenLgpdPortal={() => setLgpdSession(selectedSession || sessions[0] || null)}
             />
 
             <main className="flex-1 pb-24 lg:pb-16">
@@ -438,6 +480,8 @@ export default function App() {
                   onShowToast={showToast}
                   isDemoMode={isDemoMode}
                   studioName={activeStudio.name}
+                  privacyMode={privacyMode}
+                  onOpenLgpdModal={(session) => setLgpdSession(session)}
                 />
               )}
 
@@ -463,6 +507,7 @@ export default function App() {
                   logs={logs}
                   onTriggerSimulatedPayment={handleTriggerSimulatedPayment}
                   onShowToast={showToast}
+                  privacyMode={privacyMode}
                 />
               )}
 
@@ -570,6 +615,15 @@ export default function App() {
       <LegalHashModal
         session={legalHashSession}
         onClose={() => setLegalHashSession(null)}
+      />
+
+      <LGPDModal
+        session={lgpdSession}
+        isOpen={!!lgpdSession}
+        onClose={() => setLgpdSession(null)}
+        onAnonymizeSession={handleAnonymizeSession}
+        onPurgeHealthData={handlePurgeHealthData}
+        onShowToast={showToast}
       />
 
       {/* Notification Toast */}

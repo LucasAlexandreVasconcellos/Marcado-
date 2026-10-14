@@ -13,6 +13,7 @@ interface StudioSidebarProps {
   isDemoMode?: boolean;
   onCloseMobile?: () => void;
   isMobileDrawer?: boolean;
+  onOpenLgpdModal?: () => void;
 }
 
 export const StudioSidebar: React.FC<StudioSidebarProps> = ({
@@ -25,6 +26,7 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
   isDemoMode = false,
   onCloseMobile,
   isMobileDrawer = false,
+  onOpenLgpdModal,
 }) => {
   return (
     <aside
@@ -184,6 +186,21 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
 
       {/* Footer Profile & Logout */}
       <div className="p-4 border-t border-white/5 flex flex-col gap-2">
+        {onOpenLgpdModal && (
+          <button
+            type="button"
+            onClick={onOpenLgpdModal}
+            className="w-full py-2 px-3 rounded-xl bg-[#141415] hover:bg-[#1c1b1c] text-[#8f9194] hover:text-[#fabc4d] text-[11px] font-semibold flex items-center justify-between border border-white/5 transition-colors cursor-pointer"
+            title="Portal de Privacidade e Direitos do Titular (Art. 18 LGPD)"
+          >
+            <span className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[16px] text-[#fabc4d]">verified_user</span>
+              <span>Privacidade & LGPD</span>
+            </span>
+            <span className="text-[10px] font-mono text-[#fabc4d]">Art. 18</span>
+          </button>
+        )}
+
         <div className="flex items-center justify-between p-2 rounded-xl bg-[#141415] border border-white/5">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-lg bg-[#fabc4d]/15 border border-[#fabc4d]/30 flex items-center justify-center text-[#fabc4d] font-bold text-xs shrink-0">

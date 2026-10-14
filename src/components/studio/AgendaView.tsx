@@ -10,6 +10,7 @@ import {
   indicatorCardVariants,
   EASE_OUT_EXPO,
 } from '../../design-system/motionVariants.ts';
+import { maskPhone } from '../../utils/privacy.ts';
 
 interface AgendaViewProps {
   sessions: Session[];
@@ -19,6 +20,8 @@ interface AgendaViewProps {
   onShowToast: (msg: string) => void;
   isDemoMode?: boolean;
   studioName?: string;
+  privacyMode?: boolean;
+  onOpenLgpdModal?: (session: Session) => void;
 }
 
 export const AgendaView: React.FC<AgendaViewProps> = ({
@@ -29,11 +32,21 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
   onShowToast,
   isDemoMode = false,
   studioName = 'Atelier Jardins',
+  privacyMode = true,
+  onOpenLgpdModal,
 }) => {
   const [filter, setFilter] = useState<'all' | 'confirmada' | 'pix_pendente' | 'termo_pendente'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [copiedBioLink, setCopiedBioLink] = useState(false);
   const [simulatorStep, setSimulatorStep] = useState(1);
+  const [revealedPhones, setRevealedPhones] = useState<Record<string, boolean>>({});
+
+  const toggleRevealPhone = (sessionId: string) => {
+    setRevealedPhones((prev) => ({
+      ...prev,
+      [sessionId]: !prev[sessionId],
+    }));
+  };
 
   const copyToClipboard = (text: string, msg: string) => {
     navigator.clipboard.writeText(text);
@@ -341,6 +354,16 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                             <span className="font-semibold text-white text-sm sm:text-base min-w-[140px] truncate">
                               {session.clientName}
                             </span>
+                            {session.isAnonymized && (
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-800/40 font-mono">
+                                Anonimizado LGPD
+                              </span>
+                            )}
+                            {session.sensitiveDataPurged && !session.isAnonymized && (
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800/40 font-mono">
+                                Saúde Expurgada
+                              </span>
+                            )}
                             {session.isRecurring && (
                               <span
                                 className="material-symbols-outlined text-[16px] text-[#fabc4d]"
@@ -350,7 +373,21 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-[#8f9194] font-mono">{session.clientPhone}</span>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="text-xs text-[#8f9194] font-mono">
+                              {maskPhone(session.clientPhone, !privacyMode || !!revealedPhones[session.id])}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => toggleRevealPhone(session.id)}
+                              className="text-[#8f9194] hover:text-[#fabc4d] transition-colors p-0.5 flex items-center justify-center cursor-pointer"
+                              title={revealedPhones[session.id] ? "Ocultar telefone" : "Revelar telefone (LGPD)"}
+                            >
+                              <span className="material-symbols-outlined text-[14px]">
+                                {revealedPhones[session.id] ? 'visibility_off' : 'visibility'}
+                              </span>
+                            </button>
+                          </div>
                           <div
                             className="flex items-center gap-1.5 mt-1 text-xs text-[#c5c7c9] truncate"
                             title={session.project}
@@ -430,6 +467,17 @@ export const AgendaView: React.FC<AgendaViewProps> = ({
                         >
                           <span className="material-symbols-outlined text-[19px]">description</span>
                         </button>
+
+                        {onOpenLgpdModal && (
+                          <button
+                            type="button"
+                            onClick={() => onOpenLgpdModal(session)}
+                            className="w-10 h-10 rounded-xl bg-[#2a2a2b] hover:bg-[#353436] flex items-center justify-center text-[#fabc4d] transition-colors cursor-pointer shrink-0"
+                            title="Portal LGPD: Direitos do Titular (Art. 18)"
+                          >
+                            <span className="material-symbols-outlined text-[19px]">verified_user</span>
+                          </button>
+                        )}
 
                         {/* Botão de Demonstração (Aparece SOMENTE no modo ?demo=1) */}
                         {isDemoMode && (

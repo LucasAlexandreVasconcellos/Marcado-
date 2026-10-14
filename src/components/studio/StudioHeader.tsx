@@ -11,6 +11,9 @@ interface StudioHeaderProps {
   onManageStudios?: () => void;
   isDemoMode?: boolean;
   currentUser?: StudioUser;
+  privacyMode?: boolean;
+  onTogglePrivacyMode?: () => void;
+  onOpenLgpdPortal?: () => void;
 }
 
 export const StudioHeader: React.FC<StudioHeaderProps> = ({
@@ -23,6 +26,9 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
   onManageStudios,
   isDemoMode = false,
   currentUser,
+  privacyMode = true,
+  onTogglePrivacyMode,
+  onOpenLgpdPortal,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -152,7 +158,44 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
       </div>
 
       {/* Right items */}
-      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        {/* LGPD Global Privacy Mode Toggle */}
+        {onTogglePrivacyMode && (
+          <button
+            type="button"
+            onClick={onTogglePrivacyMode}
+            className={`px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              privacyMode
+                ? 'bg-emerald-950/40 text-emerald-300 border-emerald-600/30 hover:bg-emerald-900/40'
+                : 'bg-[#1c1b1c] text-[#8f9194] border-white/10 hover:text-white hover:border-white/20'
+            }`}
+            title={
+              privacyMode
+                ? 'Modo Privacidade LGPD Ativo (dados sensíveis mascarados). Clique para revelar.'
+                : 'Modo Privacidade LGPD Inativo. Clique para mascarar dados sensíveis.'
+            }
+          >
+            <span className="material-symbols-outlined text-[16px] sm:text-[18px]">
+              {privacyMode ? 'visibility_off' : 'visibility'}
+            </span>
+            <span className="hidden sm:inline">
+              {privacyMode ? 'Privacidade LGPD' : 'Dados Abertos'}
+            </span>
+          </button>
+        )}
+
+        {/* LGPD Portal Trigger */}
+        {onOpenLgpdPortal && (
+          <button
+            type="button"
+            onClick={onOpenLgpdPortal}
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#1c1b1c] hover:bg-[#201f20] border border-white/10 text-[#fabc4d] flex items-center justify-center transition-colors cursor-pointer"
+            title="Portal de Governança LGPD (Art. 18)"
+          >
+            <span className="material-symbols-outlined text-[18px]">shield</span>
+          </button>
+        )}
+
         {/* Switch perspective button ONLY in Demo Mode */}
         {isDemoMode && onSwitchToClientFlow && (
           <button
