@@ -1,7 +1,7 @@
 import React from 'react';
 import { StudioUser } from '../../types/index.ts';
 
-export type StudioTab = 'agenda' | 'reminders' | 'artists' | 'pix' | 'studios';
+export type StudioTab = 'dashboard' | 'agenda' | 'reminders' | 'artists' | 'pix' | 'studios';
 
 interface StudioSidebarProps {
   activeTab: StudioTab;
@@ -102,6 +102,19 @@ export const StudioSidebar: React.FC<StudioSidebarProps> = ({
 
         {/* Navigation items */}
         <nav className="flex flex-col gap-1 px-3 mt-3">
+          <button
+            type="button"
+            onClick={() => onTabChange('dashboard')}
+            className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wider transition-all text-left cursor-pointer ${
+              activeTab === 'dashboard'
+                ? 'bg-[#2a2a2b] text-white shadow-sm'
+                : 'text-[#c5c7c9] hover:bg-[#1c1b1c] hover:text-white'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[18px] text-[#fabc4d]">bar_chart</span>
+            <span>Dashboard & Métricas</span>
+          </button>
+
           <button
             type="button"
             onClick={() => onTabChange('agenda')}

@@ -62,6 +62,17 @@ A aplicação conta com dois fluxos integrados:
   - Padronização de todas as importações do ecossistema de animações para `framer-motion`.
   - Atualização com novo commit `c0e44b8` enviado para o repositório remoto no GitHub.
 
+### 2.5. Componente `DashboardView` e Gráficos com `recharts`
+- **Demanda:** Criar um componente `DashboardView` que utilize a biblioteca `recharts` para exibir um gráfico de barras da receita mensal e uma lista dos artistas que mais realizaram sessões no mês atual.
+- **Implementação:**
+  - Instalação e configuração da biblioteca `recharts`.
+  - Criação do componente `src/components/studio/DashboardView.tsx`:
+    - **Gráfico de Barras (`BarChart`):** Renderização responsiva (`ResponsiveContainer`, `Bar`, `XAxis`, `YAxis`, `Tooltip`, `Cell`) da receita mensal histórica e do mês atual, com destaque na cor âmbar `#fabc4d` e alternância entre "Receita Total" e "Sinais Pix".
+    - **Custom Tooltip:** Detalhamento da receita bruta, sinais retidos e total de procedimentos com estilo escuro premium.
+    - **Ranking de Top Artistas:** Cálculo automatizado das sessões concluídas no mês por cada tatuador residente/guest, identificadores de pódio (1º, 2º, 3º lugar com medalhas), barras de progresso relativo e faturamento gerado.
+    - **Indicadores Bento com Framer Motion:** Cartões superiores (Receita Mensal Bruta, Volume de Sessões, Sinais Pix Retidos e Ticket Médio) animados com a curva `ease-out-expo`.
+  - Integração no menu lateral (`StudioSidebar.tsx`) e na barra de navegação inferior mobile (`App.tsx`).
+
 ---
 
 ## 3. Stack Tecnológica e Bibliotecas
@@ -71,6 +82,7 @@ A aplicação conta com dois fluxos integrados:
 | **Core Framework** | React 19 + TypeScript | SPA reativa tipada de alta performance |
 | **Bundler & Dev Server** | Vite 8 + ESBuild | Inicialização e compilação instantânea |
 | **Estilização** | Tailwind CSS v4 | Utilitários de design atômico e responsividade |
+| **Gráficos e Métricas** | `recharts` | Gráficos de barras interativos para receita mensal e performance |
 | **Animações** | `framer-motion` | Micro-interações, orquestração e curva `ease-out-expo` |
 | **Gráficos 3D** | Three.js (lazy-loaded) | Visualização 3D interativa da máquina rotativa de tattoo |
 | **Ícones** | Google Material Symbols & Lucide React | Iconografia técnica de dashboard |
@@ -125,7 +137,8 @@ A aplicação conta com dois fluxos integrados:
         └── studio/
             ├── StudioSidebar.tsx        # Navegação lateral desktop e gaveta mobile
             ├── StudioHeader.tsx         # Barra superior com seletor de perspectiva e perfil
-            ├── AgendaView.tsx           # Dashboard principal com KPIs animados em ease-out-expo
+            ├── DashboardView.tsx        # Gráfico Recharts de receita mensal e ranking dos top artistas
+            ├── AgendaView.tsx           # Agenda de sessões e KPIs operacionais em tempo real
             ├── PixFinanceView.tsx       # Conciliação de sinais, métricas e simulador de webhook
             ├── ArtistsView.tsx          # Gestão de tatuadores residentes e comissões
             ├── StudiosView.tsx          # Gestão de múltiplos ateliês/unidades

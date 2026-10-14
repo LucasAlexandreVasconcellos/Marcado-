@@ -18,6 +18,7 @@ import {
 // Studio components
 import { StudioSidebar, StudioTab } from './components/studio/StudioSidebar.tsx';
 import { StudioHeader } from './components/studio/StudioHeader.tsx';
+import { DashboardView } from './components/studio/DashboardView.tsx';
 import { AgendaView } from './components/studio/AgendaView.tsx';
 import { RemindersView } from './components/studio/RemindersView.tsx';
 import { ArtistsView } from './components/studio/ArtistsView.tsx';
@@ -418,6 +419,16 @@ export default function App() {
             />
 
             <main className="flex-1 pb-24 lg:pb-16">
+              {studioTab === 'dashboard' && (
+                <DashboardView
+                  sessions={sessions}
+                  artists={artists}
+                  studioName={activeStudio.name}
+                  onOpenNewSession={() => setIsNewSessionOpen(true)}
+                  onShowToast={showToast}
+                />
+              )}
+
               {studioTab === 'agenda' && (
                 <AgendaView
                   sessions={sessions}
@@ -470,6 +481,20 @@ export default function App() {
             <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#131314]/95 backdrop-blur-2xl border-t border-white/10 px-2 py-1.5 flex items-center justify-around shadow-[0_-8px_24px_rgba(0,0,0,0.6)]">
               <button
                 type="button"
+                onClick={() => setStudioTab('dashboard')}
+                className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
+                  studioTab === 'dashboard'
+                    ? 'text-[#fabc4d]'
+                    : 'text-[#8f9194] hover:text-white'
+                }`}
+                title="Dashboard & Métricas"
+              >
+                <span className="material-symbols-outlined text-[22px]">bar_chart</span>
+                <span className="text-[10px] font-semibold tracking-tight mt-0.5">Dashboard</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setStudioTab('agenda')}
                 className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
                   studioTab === 'agenda'
@@ -480,20 +505,6 @@ export default function App() {
               >
                 <span className="material-symbols-outlined text-[22px]">calendar_month</span>
                 <span className="text-[10px] font-semibold tracking-tight mt-0.5">Agenda</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setStudioTab('reminders')}
-                className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all cursor-pointer ${
-                  studioTab === 'reminders'
-                    ? 'text-[#fabc4d]'
-                    : 'text-[#8f9194] hover:text-white'
-                }`}
-                title="Lembretes WhatsApp"
-              >
-                <span className="material-symbols-outlined text-[22px]">notifications_active</span>
-                <span className="text-[10px] font-semibold tracking-tight mt-0.5">Lembretes</span>
               </button>
 
               {/* Central Raised Gold Action Button: Nova Sessão */}
